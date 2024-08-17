@@ -1,26 +1,26 @@
 <?php 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "db_archives";
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
-    if (!$conn) {
-        die("Conexão falhou: ".mysqli_connect_error());
-    }
-    $user = mysqli_real_escape_string($conn, $_POST['user']);
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $verify_password = password_hash($_POST['verify_password'], PASSWORD_DEFAULT);
-    $sql = "INSERT INTO tb_usuarios (nome, email, senha, confirmacao_senha) VALUES ('$user', '$email', '$password', '$verify_password')";
-    if (mysqli_query($conn, $sql)) {
+    include "conexao.php";
+    
+    $user = filter_var($_POST['user'], FILTER_SANITIZE_STRING);
+    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+    $senha = password_hash($_POST['senha'], PASSWORD_DEFAULT);
+
+    $stmt = $conn->prepare("INSERT INTO tb_usuarios (nome, email, senha) VALUES (?, ?, ?)");
+    $stmt->bind_param("sss", $user, $email, $senha);
+    
+    if ($stmt->execute()) {
         echo "Registrado com sucesso";
     } else {
-        echo "Erro: ".$sql."<br>".mysqli_error($conn);
+        error_log("Erro na inserção de usuário: " . $stmt->error);
+        echo "Erro ao registrar. Por favor, tente novamente.";
     }
+
+    $stmt->close();
     mysqli_close($conn);
 }
 ?>
+
 
 
 
@@ -48,9 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <label for="email">Email</label>
         <input type="email" id="email" name="email" required>
         <label for="senha">Senha</label>
-        <input type="password" id="password" name="password" required>
-        <label for="verify_password">Confirme sua senha</label>
-        <input type="password" id="verify_password" name="verify_password" required>
+        <input type="password" id="senha" name="senha" required>
 
         <button type="submit">Cadastrar</button>
     </form>

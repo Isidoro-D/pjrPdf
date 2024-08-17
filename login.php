@@ -1,3 +1,35 @@
+<?php
+
+session_start();
+
+include 'conexao.php';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+    $senha = $_POST['senha'];
+
+    $stmt = $conn->prepare("SELECT * FROM tb_usuarios WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+        if (password_verify($senha, $user['senha'])) {
+            $_SESSION['usuario_id'] = $user['usuario_id'];
+            $_SESSION['usuario_nome'] = $user['nome'];
+
+            header("Location: main_page.php");
+            exit;
+        } else {
+            echo "Senha incorreta.";
+        }
+    } else {
+        echo "Email incorreto.";
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -18,23 +50,24 @@
 
 <body>
     <div class="bg_login"></div>
-        <div class="container">
-            <div class="banner">
-                <h2 class="title">Izzy Archives</h2>
-                <h3 class="subtitle">Aqui você pode salvar todos seus <br> documentos importantes de forma gratuita!
-                </h3>
-            </div>
-            <div class="login">
-                <form method="post">
-                    <label for="user">Usuário</label>
-                    <input type="text" name="user" id="user" required>
-                    <label for="senha">Senha</label>
-                    <input type="password" name="password" id="password" required>
-                    <button class="btn" type="submit">Entrar</button>
-                </form>
-                <a href="cadastro_usuario.php" target="_self" rel="noopener noreferrer">Ainda sem conta? Cadastre-se aqui.</a>
-            </div>
+    <div class="container">
+        <div class="banner">
+            <h2 class="title">Izzy Archives</h2>
+            <h3 class="subtitle">Aqui você pode salvar todos seus <br> documentos importantes de forma gratuita!
+            </h3>
         </div>
+        <div class="login">
+            <form method="post">
+                <label for="email">Email</label>
+                <input type="email" name="email" required>
+                <label for="senha">Senha</label>
+                <input type="password" name="senha" required>
+                <button class="btn" type="submit" value="Entrar">Entrar</button>
+            </form>
+            <a href="cadastro_usuario.php" target="_self" rel="noopener noreferrer">Ainda sem conta? Cadastre-se
+                aqui.</a>
+        </div>
+    </div>
 </body>
 
 </html>

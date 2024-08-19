@@ -7,3 +7,29 @@
 .container {
     font-family: "Poppins", sans-serif;
 }
+
+
+.title {
+    font-size: 3rem;
+}
+
+.subtitle {
+    font-size: 2.25rem;
+}
+
+.title, .subtitle {
+    line-height: 60px;
+}
+
+input {
+    padding-left: 8px;
+    font-size: 1.15em;
+}
+label {
+    font-size: 1.25rem;
+    font-weight: 500;
+}
+
+a {
+    color: black;
+}

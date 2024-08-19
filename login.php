@@ -63,9 +63,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <label for="senha">Senha</label>
                 <input type="password" name="senha" required>
                 <button class="btn" type="submit" value="Entrar">Entrar</button>
+                <a href="cadastro_usuario.php" target="_self" rel="noopener noreferrer">Ainda sem conta? Cadastre-se aqui.</a>
             </form>
-            <a href="cadastro_usuario.php" target="_self" rel="noopener noreferrer">Ainda sem conta? Cadastre-se
-                aqui.</a>
         </div>
     </div>
 </body>

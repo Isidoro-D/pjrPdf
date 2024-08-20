@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['archive'])) {
     <div class="container-load">
         <span class="loader"></span>
         <p>Redirecionando para página principal...</p>
-    </div>?
+    </div>
 </body>
 
 </html>

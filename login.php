@@ -16,10 +16,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
         if (password_verify($senha, $user['senha'])) {
-            $_SESSION['usuario_id'] = $user['usuario_id'];
+            $_SESSION['usuario_id'] = $user['id'];
             $_SESSION['usuario_nome'] = $user['nome'];
 
-            header("Location: main_page.php");
+            header("Location: redirect_login.php");
             exit;
         } else {
             echo "Senha incorreta.";

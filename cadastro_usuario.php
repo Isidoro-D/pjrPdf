@@ -11,6 +11,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($stmt->execute()) {
         echo "Registrado com sucesso";
+        header("Location: login.php");
+            exit;
     } else {
         error_log("Erro na inserção de usuário: " . $stmt->error);
         echo "Erro ao registrar. Por favor, tente novamente.";

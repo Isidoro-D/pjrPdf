@@ -1,27 +1,51 @@
 <?php
-session_start();
-if (isset($_SESSION["usuario_id"])) {
-    header("Location: login.php");
-    exit;
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    include "conexao.php";
+
+    $arquivo = $_POST['archive'];
+
+    $stmt = $conn->prepare("INSERT INTO tb_arquivos (arquivo) VALUES (?)");
+    $stmt->bind_param("s", $arquivo);
+
+    if ($stmt->execute()) {
+        echo "Registrado com sucesso";
+    } else {
+        error_log("Erro na inserção de usuário: " . $stmt->error);
+        echo "Erro ao registrar. Por favor, tente novamente.";
+    }
+
+    $stmt->close();
+    mysqli_close($conn);
 }
-
 ?>
-
 
 <!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/style_upload.css">
     <title>Painel</title>
 </head>
 
 <body>
     <div class="container">
-        <h2 class="title">Bem-Vindo, <?php echo htmlspecialchars($_SESSION['usuario_name'])?>!</h2>
-        <p>Você está logado.</p>
+        <form action="upload.php" method="post" enctype="multipart/form-data">
+            <div class="arquivos">
+                <input type="file" name="archive" accept="application/pdf">
+                <p>Selecione o arquivo aqui</p>
+            </div> 
+            <button type="submit">Enviar arquivo</button>
+        </form>
         <a href="logout.php">Sair</a>
+        <div class="gallery">
+            <?php
+                $file = glob("uploads/*.*");
+                foreach ($file as $file) {
+                    echo '<embed src="' . $file .'" type="application/pdf" width="100%" height="100%">';
+                }
+            ?>
+        </div>
     </div>
 </body>
 
